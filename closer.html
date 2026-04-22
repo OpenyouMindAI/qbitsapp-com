@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QBITS Kioscos — ¿Cuánto te afanaron este mes sin que te des cuenta?</title>
+    <meta name="description" content="El kiosquero promedio pierde $1.230.000/mes entre merma, afanos y diferencias de caja. QBITS te muestra exactamente dónde se va tu plata. Garantía 20 días.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Meta Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      // Advanced Matching: capture URL params if available (from GHL/CRM links)
+      (function(){
+        var params = new URLSearchParams(window.location.search);
+        var matchData = {};
+        if (params.get('email')) matchData.em = params.get('email');
+        if (params.get('phone')) matchData.ph = params.get('phone');
+        if (params.get('name')) {
+          var parts = params.get('name').split(' ');
+          matchData.fn = parts[0] || '';
+          matchData.ln = parts.slice(1).join(' ') || '';
+        }
+        if (params.get('fn')) matchData.fn = params.get('fn');
+        if (params.get('ln')) matchData.ln = params.get('ln');
+        if (params.get('country')) matchData.country = params.get('country');
+        if (params.get('external_id')) matchData.external_id = params.get('external_id');
+
+        if (Object.keys(matchData).length > 0) {
+          fbq('init', '966854009200030', matchData);
+        } else {
+          fbq('init', '966854009200030');
+        }
+      })();
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=966854009200030&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'Inter', system-ui, sans-serif; background: #09090b; color: #fff; overflow-x: hidden; }
+      ::selection { background: rgba(6,182,212,0.3); }
+      
+      /* Animations */
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+      @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+      @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+      @keyframes countPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+      @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+      
+      .animate-pulse { animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+      .animate-ping { animation: ping 1s cubic-bezier(0,0,0.2,1) infinite; }
+      .animate-float { animation: float 3s ease-in-out infinite; }
+      .animate-shake { animation: shake 0.5s ease-in-out; }
+      .animate-slideUp { animation: slideUp 0.6s ease-out forwards; }
+      .animate-gradient { background-size: 200% 200%; animation: gradient 3s ease infinite; }
+      
+      .btn-cta { 
+        transition: all 0.3s; 
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-cta:hover { transform: scale(1.03); }
+      .btn-cta::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        transform: rotate(45deg);
+        transition: all 0.6s;
+      }
+      .btn-cta:hover::after { left: 100%; }
+      
+      .loss-card { transition: all 0.4s; }
+      .loss-card:hover { transform: translateY(-4px); border-color: rgba(239,68,68,0.5); }
+      
+      .guarantee-glow {
+        box-shadow: 0 0 60px rgba(34,197,94,0.15), inset 0 0 60px rgba(34,197,94,0.05);
+      }
+      
+      .price-glow {
+        text-shadow: 0 0 40px rgba(6,182,212,0.4);
+      }
+      
+      .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+      .faq-content.open { max-height: 500px; }
+      .faq-toggle { transition: transform 0.3s; }
+      .faq-toggle.open { transform: rotate(45deg); }
+      
+      .countdown-box {
+        background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05));
+        border: 1px solid rgba(239,68,68,0.3);
+      }
+      
+      /* Scroll reveal */
+      .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      
+      /* Story quote */
+      .story-quote {
+        border-left: 4px solid;
+        border-image: linear-gradient(to bottom, #06b6d4, #a855f7) 1;
+      }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY NAV -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2">
+                <img alt="QBITS" height="32" width="32" src="https://qbitsapp.com/images/logo.png" class="rounded">
+                <span class="font-black text-white text-lg tracking-tighter">QBITS</span>
+            </a>
+            <div class="flex items-center gap-3">
+                <!-- Countdown mini -->
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/50 border border-red-500/20">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                    <span class="text-red-400 text-xs font-bold font-mono" id="nav-countdown">--:--:--</span>
+                </div>
+                <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" 
+                   class="h-10 px-5 flex items-center text-sm font-black text-black bg-cyan-400 hover:bg-cyan-300 rounded-lg transition-all">
+                    ACTIVAR AHORA
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- ============================================ -->
+        <!-- SECTION 1: PATTERN INTERRUPT HOOK            -->
+        <!-- ============================================ -->
+        <section class="relative min-h-screen flex items-center justify-center pt-16 pb-20 overflow-hidden">
+            <!-- BG effects -->
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-red-600/10 rounded-full blur-[150px]"></div>
+                <div class="absolute bottom-0 left-0 w-[600px] h-[400px] bg-cyan-600/8 rounded-full blur-[120px]"></div>
+            </div>
+            
+            <div class="container mx-auto px-4 relative z-10 max-w-4xl text-center">
+                <!-- Pattern interrupt -->
+                <div class="mb-8 animate-slideUp">
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-black uppercase tracking-widest mb-6">
+                        ⚠️ Advertencia para dueños de kioscos y maxikioscos
+                    </span>
+                </div>
+                
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mb-8" style="animation: slideUp 0.8s ease-out forwards;">
+                    Mientras leés esto,<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">
+                        tu kiosco está perdiendo $41.000
+                    </span>
+                </h1>
+                
+                <p class="text-lg sm:text-2xl text-zinc-400 max-w-3xl mx-auto mb-4 font-medium leading-relaxed" style="animation: slideUp 1s ease-out forwards;">
+                    Mercadería que "desaparece". Empleados que cobran de más o de menos. Diferencias de caja todos los días. 
+                    Horas contando stock a mano que no te las paga nadie.
+                    <span class="text-white font-bold">Y lo peor: no sabés cuánto te cuesta todo eso.</span>
+                </p>
+                
+                <p class="text-zinc-500 text-base sm:text-lg mb-12 font-medium" style="animation: slideUp 1.1s ease-out forwards;">
+                    Hay un kiosquero en Lanús que descubrió que perdía <span class="text-red-400 font-bold">$1.230.000 por mes</span> sin darse cuenta.<br>
+                    <span class="text-cyan-400 font-semibold">Su historia está acá abajo. Y probablemente te vas a sentir identificado.</span>
+                </p>
+                
+                <!-- Open loop CTA -->
+                <a href="#historia" class="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-bold text-lg transition-colors group" style="animation: slideUp 1.3s ease-out forwards;">
+                    <span>Leer la historia de Ricardo</span>
+                    <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 2: STORYTELLING — CASO REAL          -->
+        <!-- ============================================ -->
+        <section id="historia" class="py-20 sm:py-32 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+            <div class="container mx-auto px-4 max-w-3xl relative z-10">
+                
+                <div class="text-center mb-12 reveal">
+                    <span class="text-cyan-400 text-xs font-black uppercase tracking-[0.3em]">Caso real</span>
+                    <h2 class="text-3xl sm:text-5xl font-black text-white mt-3 tracking-tight">
+                        La historia de Ricardo,<br>maxikiosco en Lanús
+                    </h2>
+                </div>
+                
+                <div class="space-y-8 text-lg text-zinc-300 leading-relaxed reveal">
+                    <p>
+                        Ricardo tiene <strong class="text-white">45 años</strong> y un maxikiosco en Lanús hace <strong class="text-white">15 años</strong>. 
+                        Abre a las 7 de la mañana, cierra a las 11 de la noche. Trabaja los 7 días de la semana. 
+                        Tiene un empleado en el turno de la tarde.
+                    </p>
+                    
+                    <p>
+                        Un día nos escribió desesperado: <em>"Vendo bien, pero a fin de mes no me queda nada. 
+                        No sé dónde se me va la plata. Estoy pensando en cerrar."</em>
+                    </p>
+                    
+                    <div class="story-quote pl-6 py-4 my-8 bg-white/3 rounded-r-xl">
+                        <p class="text-xl sm:text-2xl font-bold text-white italic">
+                            "Yo pensaba que el problema era la competencia del chino de la esquina. Resulta que el problema estaba adentro de mi propio kiosco — y no lo podía ver porque no tenía control de nada."
+                        </p>
+                        <p class="text-cyan-400 font-bold mt-3 text-sm">— Ricardo M., Maxikiosco Lanús, 15 años en el rubro</p>
+                    </div>
+                    
+                    <p>
+                        En su <strong class="text-white">primera semana con QBITS</strong>, descubrió cuatro agujeros negros que le estaban vaciando el negocio:
+                    </p>
+                    
+                    <div class="grid gap-4 my-8">
+                        <div class="flex items-start gap-4 p-5 rounded-2xl bg-zinc-900/50 border border-white/5">
+                            <span class="text-2xl">1️⃣</span>
+                            <div>
+                                <p class="text-white font-bold">Merma de stock: productos que "desaparecían"</p>
+                                <p class="text-zinc-400 text-base">Golosinas, cigarrillos, fiambres, bebidas. Todos los meses faltaba mercadería y no sabía si era robo, vencimiento o error. Pérdida: <span class="text-red-400 font-bold">$520.000/mes</span>.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-5 rounded-2xl bg-zinc-900/50 border border-white/5">
+                            <span class="text-2xl">2️⃣</span>
+                            <div>
+                                <p class="text-white font-bold">Afano hormiga del cajero del turno tarde</p>
+                                <p class="text-zinc-400 text-base">No registraba algunas ventas y se quedaba con la diferencia. Sin sistema, era imposible detectarlo. Pérdida: <span class="text-red-400 font-bold">$380.000/mes</span>.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-5 rounded-2xl bg-zinc-900/50 border border-white/5">
+                            <span class="text-2xl">3️⃣</span>
+                            <div>
+                                <p class="text-white font-bold">Diferencias de caja todos los días</p>
+                                <p class="text-zinc-400 text-base">Siempre faltaban entre $5.000 y $15.000 por día. "Errores de vuelto", decía el empleado. Pérdida: <span class="text-red-400 font-bold">$250.000/mes</span>.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-5 rounded-2xl bg-zinc-900/50 border border-white/5">
+                            <span class="text-2xl">4️⃣</span>
+                            <div>
+                                <p class="text-white font-bold">Horas perdidas contando mercadería a mano</p>
+                                <p class="text-zinc-400 text-base">Cada semana, 6 horas contando productos con cuaderno y birome. Horas que podría usar para atender o descansar. Pérdida en tiempo: <span class="text-red-400 font-bold">$80.000/mes</span>.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-cyan-950/30 to-purple-950/30 border border-cyan-500/20 text-center my-8">
+                        <p class="text-zinc-400 text-sm uppercase tracking-widest font-bold mb-2">Lo que Ricardo dejó de perder en 90 días</p>
+                        <p class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                            +$1.230.000 <span class="text-cyan-400">/mes</span>
+                        </p>
+                        <p class="text-zinc-400 mt-2 font-medium">$14.760.000 por año — sin vender un caramelo más</p>
+                    </div>
+                    
+                    <p class="text-center text-zinc-500 font-medium">
+                        Hoy Ricardo controla su kiosco <strong class="text-white">desde el celular</strong>, incluso cuando no está. 
+                        Se enteró quién le robaba. Recuperó plata que daba por perdida. 
+                        Y dice que su único arrepentimiento es <span class="text-cyan-400 font-bold">no haber empezado antes</span>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 3: LOSS AVERSION — EL COSTO          -->
+        <!-- ============================================ -->
+        <section class="py-20 sm:py-32 relative bg-zinc-950/50">
+            <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px); background-size: 40px 40px;"></div>
+            <div class="container mx-auto px-4 max-w-5xl relative z-10">
+                
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-4">
+                        Cada día sin control,<br>
+                        <span class="text-red-500">tu kiosco pierde plata.</span>
+                    </h2>
+                    <p class="text-zinc-400 text-lg sm:text-xl max-w-2xl mx-auto font-medium">
+                        No es paranoia. Son números reales de kioscos y maxikioscos argentinos.
+                    </p>
+                </div>
+                
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 reveal">
+                    <div class="loss-card p-6 rounded-2xl bg-zinc-900/50 border border-red-500/10 text-center">
+                        <div class="text-4xl sm:text-5xl font-black text-red-500 mb-2">$520K</div>
+                        <div class="text-sm text-zinc-400 font-bold uppercase tracking-wider">Merma de stock<br><span class="text-zinc-600">productos que "desaparecen"</span></div>
+                    </div>
+                    <div class="loss-card p-6 rounded-2xl bg-zinc-900/50 border border-red-500/10 text-center">
+                        <div class="text-4xl sm:text-5xl font-black text-red-500 mb-2">$380K</div>
+                        <div class="text-sm text-zinc-400 font-bold uppercase tracking-wider">Afano hormiga<br><span class="text-zinc-600">ventas sin registrar</span></div>
+                    </div>
+                    <div class="loss-card p-6 rounded-2xl bg-zinc-900/50 border border-red-500/10 text-center">
+                        <div class="text-4xl sm:text-5xl font-black text-red-500 mb-2">$250K</div>
+                        <div class="text-sm text-zinc-400 font-bold uppercase tracking-wider">Diferencias de caja<br><span class="text-zinc-600">"errores de vuelto" diarios</span></div>
+                    </div>
+                    <div class="loss-card p-6 rounded-2xl bg-zinc-900/50 border border-red-500/10 text-center">
+                        <div class="text-4xl sm:text-5xl font-black text-red-500 mb-2">$80K</div>
+                        <div class="text-sm text-zinc-400 font-bold uppercase tracking-wider">Horas perdidas<br><span class="text-zinc-600">contando a mano con cuaderno</span></div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 p-6 sm:p-8 rounded-2xl bg-red-950/20 border border-red-500/20 text-center reveal">
+                    <p class="text-zinc-400 text-sm uppercase tracking-widest font-bold mb-1">Pérdida estimada mensual total</p>
+                    <p class="text-5xl sm:text-7xl font-black text-red-500 tracking-tight">$1.230.000</p>
+                    <p class="text-zinc-500 mt-3 text-base sm:text-lg font-medium">
+                        Son <strong class="text-red-400">$14.760.000 por año</strong> que se te escapan sin que lo notes.
+                        <br>QBITS cuesta <strong class="text-cyan-400">$23.000/mes</strong>. Hacé la cuenta.
+                    </p>
+                </div>
+                
+                <!-- Future pacing -->
+                <div class="mt-16 text-center reveal">
+                    <p class="text-xl sm:text-2xl text-zinc-300 font-bold leading-relaxed max-w-3xl mx-auto">
+                        Imaginá estar en tu casa a la noche, abrir el celular, y ver: 
+                        <span class="text-cyan-400">"Hoy se vendieron $380.000. Caja cuadrada. Stock OK. Sin faltantes."</span>
+                        <br><br>
+                        <span class="text-white">Eso es QBITS. Y así se siente dormir tranquilo.</span>
+                    </p>
+                </div>
+
+                <!-- Mid-section CTA -->
+                <div class="mt-12 text-center reveal">
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" 
+                       class="btn-cta inline-flex items-center justify-center rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-black text-lg h-14 px-10 shadow-[0_0_40px_rgba(6,182,212,0.3)] transition-all">
+                        QUIERO DEJAR DE PERDER PLATA →
+                    </a>
+                    <p class="text-zinc-600 text-xs mt-3">Son $767 por día — menos que un paquete de alfajores</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 4: ANTES / DESPUÉS                   -->
+        <!-- ============================================ -->
+        <section class="py-20 sm:py-32 relative overflow-hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/5 rounded-full blur-[150px] pointer-events-none"></div>
+            <div class="container mx-auto px-4 max-w-5xl relative z-10">
+                
+                <div class="text-center mb-16 reveal">
+                    <span class="text-purple-400 text-xs font-black uppercase tracking-[0.3em]">Tu kiosco antes vs después</span>
+                    <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight mt-3">
+                        Mismo kiosco. Mismo barrio.<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-cyan-400">Resultados completamente distintos.</span>
+                    </h2>
+                </div>
+                
+                <div class="grid sm:grid-cols-2 gap-6 sm:gap-8 reveal">
+                    <!-- ANTES -->
+                    <div class="p-8 rounded-2xl bg-zinc-900/30 border border-red-500/20">
+                        <p class="text-red-400 text-sm font-black uppercase tracking-widest mb-6">❌ Sin QBITS</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <span class="text-red-500 mt-1">✗</span>
+                                <p class="text-zinc-400 font-medium">Contás stock a mano con cuaderno y birome</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-red-500 mt-1">✗</span>
+                                <p class="text-zinc-400 font-medium">No sabés qué productos faltan hasta que los buscás</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-red-500 mt-1">✗</span>
+                                <p class="text-zinc-400 font-medium">Diferencias de caja todos los días</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-red-500 mt-1">✗</span>
+                                <p class="text-zinc-400 font-medium">No sabés si tu empleado te roba o no</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-red-500 mt-1">✗</span>
+                                <p class="text-zinc-400 font-medium">Pedís mercadería "de memoria" y te sobra o te falta</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-red-500 mt-1">✗</span>
+                                <p class="text-zinc-400 font-medium">No tenés idea cuánto ganás realmente por mes</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DESPUÉS -->
+                    <div class="p-8 rounded-2xl bg-gradient-to-br from-cyan-950/20 to-purple-950/10 border border-cyan-500/20">
+                        <p class="text-cyan-400 text-sm font-black uppercase tracking-widest mb-6">✅ Con QBITS</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-400 mt-1">✓</span>
+                                <p class="text-zinc-300 font-medium">Stock se actualiza solo con cada venta</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-400 mt-1">✓</span>
+                                <p class="text-zinc-300 font-medium">Alerta automática cuando un producto está por agotarse</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-400 mt-1">✓</span>
+                                <p class="text-zinc-300 font-medium">Caja blindada: cada peso queda registrado</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-400 mt-1">✓</span>
+                                <p class="text-zinc-300 font-medium">Sabés exactamente qué vendió cada turno</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-400 mt-1">✓</span>
+                                <p class="text-zinc-300 font-medium">Pedidos inteligentes: el sistema te dice qué reponer</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="text-cyan-400 mt-1">✓</span>
+                                <p class="text-zinc-300 font-medium">Ganancia real del mes en un solo toque</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 5: QUÉ HACE QBITS (beneficios)      -->
+        <!-- ============================================ -->
+        <section class="py-20 sm:py-32 relative overflow-hidden bg-zinc-950/50">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-600/5 rounded-full blur-[150px] pointer-events-none"></div>
+            <div class="container mx-auto px-4 max-w-5xl relative z-10">
+                
+                <div class="text-center mb-16 reveal">
+                    <span class="text-cyan-400 text-xs font-black uppercase tracking-[0.3em]">La solución</span>
+                    <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight mt-3">
+                        QBITS no es "un sistema más".<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Es tu guardia que nunca duerme.</span>
+                    </h2>
+                </div>
+                
+                <div class="grid sm:grid-cols-2 gap-6 sm:gap-8 reveal">
+                    <div class="p-8 rounded-2xl bg-zinc-900/30 border border-white/5 hover:border-cyan-500/20 transition-all group">
+                        <div class="text-3xl mb-4">📸</div>
+                        <h3 class="text-xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                            Foto a la factura del proveedor → stock cargado
+                        </h3>
+                        <p class="text-zinc-400 font-medium">Se acabó tipear producto por producto. Le sacás una foto a la factura del distribuidor y la IA carga todo en 3 segundos.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-zinc-900/30 border border-white/5 hover:border-cyan-500/20 transition-all group">
+                        <div class="text-3xl mb-4">🛡️</div>
+                        <h3 class="text-xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                            Caja blindada: cero afano, cero "errores"
+                        </h3>
+                        <p class="text-zinc-400 font-medium">Cada venta queda registrada. Si tu empleado no pasa un producto, lo sabés. Las diferencias de caja se terminan.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-zinc-900/30 border border-white/5 hover:border-cyan-500/20 transition-all group">
+                        <div class="text-3xl mb-4">📊</div>
+                        <h3 class="text-xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                            Sabé cuánto ganás de verdad — no lo que "creés"
+                        </h3>
+                        <p class="text-zinc-400 font-medium">Ventas, costos, margen por producto, ganancia neta del día. Números reales, no sensaciones. Desde tu celular.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-zinc-900/30 border border-white/5 hover:border-cyan-500/20 transition-all group">
+                        <div class="text-3xl mb-4">💬</div>
+                        <h3 class="text-xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                            Preguntale: "¿cuánto vendí hoy?" y te responde
+                        </h3>
+                        <p class="text-zinc-400 font-medium">IA conversacional. Le hablás como a una persona. "¿Qué producto deja más margen?" "¿Cuántos Coca me quedan?" Responde al toque.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-zinc-900/30 border border-white/5 hover:border-cyan-500/20 transition-all group">
+                        <div class="text-3xl mb-4">🔔</div>
+                        <h3 class="text-xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                            Alertas de stock bajo: nunca más "no tengo"
+                        </h3>
+                        <p class="text-zinc-400 font-medium">El sistema te avisa antes de que se agote un producto. No perdés más ventas por falta de mercadería.</p>
+                    </div>
+                    <div class="p-8 rounded-2xl bg-zinc-900/30 border border-white/5 hover:border-cyan-500/20 transition-all group">
+                        <div class="text-3xl mb-4">📱</div>
+                        <h3 class="text-xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                            Controlá todo desde tu celular, estés donde estés
+                        </h3>
+                        <p class="text-zinc-400 font-medium">Te fuiste a almorzar, estás en tu casa, saliste un domingo. Tu kiosco sigue controlado desde tu bolsillo.</p>
+                    </div>
+                </div>
+                
+                <!-- Video demo -->
+                <div class="mt-20 text-center reveal">
+                    <p class="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-8">Mirá cómo funciona en 30 segundos</p>
+                    <div class="relative max-w-xs mx-auto group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                        <div class="relative rounded-[2.5rem] border-[8px] border-zinc-900 bg-black overflow-hidden shadow-2xl" style="aspect-ratio: 9/19;">
+                            <video autoplay muted loop playsinline controls class="w-full h-full object-cover">
+                                <source src="https://pub-1ee8b00ceed2443c917a8188cf6ed6a4.r2.dev/videos-publicitarios/kioskos/publicitario1.mp4" type="video/mp4">
+                            </video>
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-zinc-900 rounded-b-2xl z-20"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA after features -->
+                <div class="mt-16 text-center reveal">
+                    <a href="https://wa.me/5491136444546?text=%C2%A1Hola!%20Vi%20la%20oferta%20de%20QBITS%20para%20kioscos%20y%20quiero%20m%C3%A1s%20info." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="btn-cta inline-flex items-center justify-center gap-3 rounded-xl bg-green-600 hover:bg-green-500 text-white font-black text-lg h-16 px-10 shadow-[0_0_40px_rgba(34,197,94,0.3)] transition-all">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                        QUIERO QUE ME ASESOREN POR WHATSAPP
+                    </a>
+                    <p class="text-zinc-600 text-xs mt-3">Respuesta en menos de 2 horas · Sin compromiso</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 6: PRUEBA SOCIAL                     -->
+        <!-- ============================================ -->
+        <section class="py-20 sm:py-32 relative overflow-hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-900/10 rounded-full blur-[150px]"></div>
+            <div class="container mx-auto px-4 max-w-5xl relative z-10">
+                
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl sm:text-5xl font-black tracking-tight mb-4">
+                        No nos creas a nosotros.<br>
+                        <span class="text-cyan-400">Escuchá a ellos.</span>
+                    </h2>
+                    <p class="text-zinc-400 text-lg font-medium">Kiosqueros reales. Números reales. Resultados en menos de 30 días.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6 reveal">
+                    <!-- Testimonio 1 -->
+                    <div class="p-6 sm:p-8 rounded-2xl bg-black/50 border border-white/5 hover:border-cyan-500/20 transition-all">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-500/50">
+                                <img alt="Ricardo M." class="w-full h-full object-cover" src="https://i.pravatar.cc/150?u=ricardo-kiosco" loading="lazy">
+                            </div>
+                            <div>
+                                <p class="text-white font-black text-sm">Ricardo M.</p>
+                                <p class="text-cyan-400 text-xs font-bold">Maxikiosco — Lanús</p>
+                            </div>
+                        </div>
+                        <p class="text-zinc-300 font-medium leading-relaxed mb-4">
+                            "Descubrí que mi empleado de la tarde <strong class="text-white">no registraba 1 de cada 5 ventas</strong>. Con la caja blindada de QBITS se terminó el afano. En un mes recuperé lo que pagué por todo el año."
+                        </p>
+                        <div class="flex items-center gap-2 text-green-400 text-sm font-bold">
+                            <span>📈</span> Recuperó $380.000/mes en afanos
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonio 2 -->
+                    <div class="p-6 sm:p-8 rounded-2xl bg-black/50 border border-white/5 hover:border-cyan-500/20 transition-all">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-500/50">
+                                <img alt="Marta L." class="w-full h-full object-cover" src="https://i.pravatar.cc/150?u=marta-kiosco" loading="lazy">
+                            </div>
+                            <div>
+                                <p class="text-white font-black text-sm">Marta L.</p>
+                                <p class="text-cyan-400 text-xs font-bold">Kiosco — Quilmes</p>
+                            </div>
+                        </div>
+                        <p class="text-zinc-300 font-medium leading-relaxed mb-4">
+                            "Antes hacía los pedidos <strong class="text-white">'de ojo'</strong> y siempre me sobraban cosas que vencían o me faltaban las que más vendía. QBITS me dice exactamente qué reponer."
+                        </p>
+                        <div class="flex items-center gap-2 text-green-400 text-sm font-bold">
+                            <span>📈</span> Redujo merma por vencimiento un 70%
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonio 3 -->
+                    <div class="p-6 sm:p-8 rounded-2xl bg-black/50 border border-white/5 hover:border-cyan-500/20 transition-all">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-500/50">
+                                <img alt="Diego F." class="w-full h-full object-cover" src="https://i.pravatar.cc/150?u=diego-kiosco" loading="lazy">
+                            </div>
+                            <div>
+                                <p class="text-white font-black text-sm">Diego F.</p>
+                                <p class="text-cyan-400 text-xs font-bold">2 kioscos — Avellaneda</p>
+                            </div>
+                        </div>
+                        <p class="text-zinc-300 font-medium leading-relaxed mb-4">
+                            "Tengo 2 kioscos y antes vivía corriendo de uno al otro. Ahora <strong class="text-white">controlo los dos desde el celular</strong>. Sé lo que vendió cada uno, al minuto. Me cambió la vida."
+                        </p>
+                        <div class="flex items-center gap-2 text-green-400 text-sm font-bold">
+                            <span>📈</span> De 16hs/día a 10hs/día de trabajo
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Social proof numbers -->
+                <div class="grid grid-cols-3 gap-4 mt-12 reveal">
+                    <div class="text-center p-4 rounded-xl bg-white/3 border border-white/5">
+                        <p class="text-2xl sm:text-4xl font-black text-white">93%</p>
+                        <p class="text-zinc-500 text-xs sm:text-sm font-bold mt-1">siguen después<br>del primer mes</p>
+                    </div>
+                    <div class="text-center p-4 rounded-xl bg-white/3 border border-white/5">
+                        <p class="text-2xl sm:text-4xl font-black text-white">15 min</p>
+                        <p class="text-zinc-500 text-xs sm:text-sm font-bold mt-1">para empezar<br>a usar el sistema</p>
+                    </div>
+                    <div class="text-center p-4 rounded-xl bg-white/3 border border-white/5">
+                        <p class="text-2xl sm:text-4xl font-black text-white">1 mes</p>
+                        <p class="text-zinc-500 text-xs sm:text-sm font-bold mt-1">para recuperar<br>la inversión</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 7: ANCLAJE DE PRECIO                 -->
+        <!-- ============================================ -->
+        <section id="precio" class="py-20 sm:py-32 relative overflow-hidden">
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/8 rounded-full blur-[150px]"></div>
+            </div>
+            <div class="container mx-auto px-4 max-w-4xl relative z-10">
+                
+                <div class="text-center mb-12 reveal">
+                    <h2 class="text-3xl sm:text-5xl font-black tracking-tight mb-4">
+                        ¿Cuánto vale tener el control total<br>
+                        <span class="text-cyan-400">de tu kiosco?</span>
+                    </h2>
+                </div>
+                
+                <!-- Anchor: what it costs without control -->
+                <div class="text-center mb-8 reveal">
+                    <p class="text-zinc-400 text-lg font-medium mb-6">
+                        Ya viste los números. Sin control, un kiosco pierde 
+                        <span class="text-red-400 font-bold">$1.230.000/mes</span>. 
+                        ¿Cuánto pagarías por frenar esa hemorragia?
+                    </p>
+                    <p class="text-zinc-500 text-base">
+                        QBITS con IA integrada, caja blindada, control de stock automático y alertas inteligentes cuesta normalmente:
+                    </p>
+                    <p class="text-3xl sm:text-4xl font-black text-zinc-500 line-through mt-4">$38.999 /mes</p>
+                </div>
+                
+                <!-- The offer -->
+                <div class="max-w-3xl mx-auto rounded-[2rem] border-2 border-cyan-500/30 bg-black/80 backdrop-blur-xl p-8 sm:p-12 relative overflow-hidden reveal">
+                    <!-- Glow effect -->
+                    <div class="absolute -inset-px bg-gradient-to-r from-cyan-500/20 via-transparent to-purple-500/20 rounded-[2rem] blur-sm"></div>
+                    
+                    <div class="relative z-10 text-center">
+                        <!-- Urgency badge -->
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-8">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                            </span>
+                            <span class="text-red-400 text-xs font-black uppercase tracking-widest">Oferta lanzamiento — cupos limitados</span>
+                        </div>
+                        
+                        <!-- Price -->
+                        <div class="mb-8">
+                            <p class="text-zinc-500 text-sm uppercase tracking-widest font-bold mb-2">Precio promocional</p>
+                            <div class="flex items-baseline justify-center gap-2">
+                                <span class="text-6xl sm:text-8xl font-black text-white price-glow tracking-tighter">$23.000</span>
+                                <span class="text-2xl text-zinc-500 font-bold">/mes</span>
+                            </div>
+                            <p class="text-cyan-400 font-black mt-3 text-sm sm:text-base uppercase tracking-wider">
+                                🔒 Precio congelado por 12 meses
+                            </p>
+                            <p class="text-zinc-500 text-sm mt-2 font-medium">
+                                Son <strong class="text-zinc-300">$767 por día</strong>. Menos que un paquete de alfajores Jorgito.
+                            </p>
+                        </div>
+                        
+                        <!-- Savings math -->
+                        <div class="p-4 rounded-xl bg-green-950/20 border border-green-500/20 mb-8">
+                            <p class="text-green-400 text-sm font-bold">🧮 La cuenta que cierra sola:</p>
+                            <p class="text-zinc-300 text-sm mt-2">
+                                Perdés <strong class="text-red-400">$1.230.000/mes</strong> sin control. 
+                                QBITS cuesta <strong class="text-cyan-400">$23.000/mes</strong>. 
+                                Retorno: <strong class="text-green-400">53x tu inversión</strong>.
+                            </p>
+                        </div>
+                        
+                        <!-- What's included -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left mb-10 max-w-lg mx-auto">
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> IA lector de facturas
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> IA conversacional
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Caja blindada anti-afano
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Control de stock automático
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Alertas de stock bajo
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Reportes de ganancia real
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Facturación ARCA
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Pagos QR (Mercado Pago)
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Soporte por WhatsApp
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-zinc-300 font-medium">
+                                <span class="text-cyan-400">✓</span> Setup y capacitación incluida
+                            </div>
+                        </div>
+                        
+                        <!-- CTA -->
+                        <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" 
+                           class="btn-cta block w-full sm:w-auto sm:inline-flex items-center justify-center rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-black text-xl sm:text-2xl h-16 sm:h-20 px-12 shadow-[0_0_60px_rgba(6,182,212,0.3)] uppercase tracking-tight">
+                            ACTIVAR MI KIOSCO INTELIGENTE
+                        </a>
+                        
+                        <p class="text-zinc-500 text-xs mt-4">Acceso inmediato · Sin permanencia · Cancelás cuando quieras</p>
+                    </div>
+                </div>
+                
+                <!-- Countdown -->
+                <div class="mt-10 text-center reveal">
+                    <div class="inline-flex items-center gap-4 px-6 py-4 rounded-2xl countdown-box">
+                        <span class="text-red-400 text-sm font-bold">⏰ Esta promo termina en:</span>
+                        <div class="flex items-center gap-1 font-mono text-2xl sm:text-3xl font-black text-white">
+                            <span id="cd-hours" class="bg-black/40 px-2 py-1 rounded">00</span>
+                            <span class="text-red-400 animate-pulse">:</span>
+                            <span id="cd-minutes" class="bg-black/40 px-2 py-1 rounded">00</span>
+                            <span class="text-red-400 animate-pulse">:</span>
+                            <span id="cd-seconds" class="bg-black/40 px-2 py-1 rounded">00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 8: GARANTÍA                          -->
+        <!-- ============================================ -->
+        <section class="py-16 sm:py-24 relative">
+            <div class="container mx-auto px-4 max-w-3xl relative z-10">
+                <div class="rounded-[2rem] p-8 sm:p-12 bg-gradient-to-br from-green-950/30 to-green-950/10 border-2 border-green-500/20 guarantee-glow text-center reveal">
+                    <div class="text-6xl mb-6">🛡️</div>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-4 tracking-tight">
+                        Garantía de <span class="text-green-400">20 días</span>: devolución del 100%
+                    </h2>
+                    <p class="text-lg text-zinc-300 leading-relaxed max-w-xl mx-auto mb-6 font-medium">
+                        Probá QBITS durante 20 días. Si no sentís que te cambió la forma de manejar tu kiosco, 
+                        te devolvemos <strong class="text-white">toda la plata. Sin preguntas. Sin vueltas.</strong>
+                    </p>
+                    <p class="text-zinc-500 text-base font-medium">
+                        ¿Por qué ofrecemos esto? Porque <span class="text-green-400 font-bold">el 93% de los kiosqueros que prueban QBITS se quedan</span>. 
+                        Estamos tan seguros de que te va a servir que el riesgo lo ponemos nosotros.
+                    </p>
+                    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm font-bold text-zinc-400">
+                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500"></span>Sin permanencia</span>
+                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500"></span>Sin letra chica</span>
+                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500"></span>Sin preguntas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 9: CTA URGENTE FINAL                 -->
+        <!-- ============================================ -->
+        <section class="py-20 sm:py-32 relative overflow-hidden bg-gradient-to-b from-zinc-950 to-black">
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-t from-cyan-600/10 to-transparent blur-[100px]"></div>
+            </div>
+            <div class="container mx-auto px-4 max-w-3xl relative z-10 text-center">
+                
+                <div class="reveal">
+                    <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6">
+                        Tenés dos opciones.
+                    </h2>
+                    
+                    <div class="grid sm:grid-cols-2 gap-6 mb-12 text-left">
+                        <!-- Option A -->
+                        <div class="p-6 rounded-2xl bg-zinc-900/50 border border-red-500/20">
+                            <p class="text-red-400 text-sm font-black uppercase tracking-widest mb-3">Opción A</p>
+                            <p class="text-zinc-300 font-medium leading-relaxed">
+                                Cerrar esta página. Volver al cuaderno y la birome. Seguir sin saber cuánto ganás ni cuánto te roban. 
+                                Seguir perdiendo <span class="text-red-400 font-bold">$1.230.000/mes</span> sin darte cuenta. 
+                                Y dentro de un año preguntarte por qué tu kiosco no crece.
+                            </p>
+                        </div>
+                        <!-- Option B -->
+                        <div class="p-6 rounded-2xl bg-gradient-to-br from-cyan-950/30 to-purple-950/20 border border-cyan-500/30">
+                            <p class="text-cyan-400 text-sm font-black uppercase tracking-widest mb-3">Opción B</p>
+                            <p class="text-zinc-300 font-medium leading-relaxed">
+                                Activar QBITS ahora por <span class="text-cyan-400 font-bold">$767 por día</span>. 
+                                Tener caja blindada, stock automático y control total en <span class="text-cyan-400 font-bold">15 minutos</span>. 
+                                Saber exactamente a dónde va cada peso. Y recuperar tu inversión en el <span class="text-white font-bold">primer mes</span>.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" 
+                       class="btn-cta block w-full sm:inline-flex items-center justify-center rounded-xl bg-white hover:bg-zinc-100 text-black font-black text-xl sm:text-2xl h-16 sm:h-20 px-12 sm:px-16 shadow-[0_0_80px_rgba(255,255,255,0.15)] uppercase tracking-tight mb-4">
+                        ELEGIR OPCIÓN B — ACTIVAR AHORA
+                    </a>
+                    
+                    <p class="text-zinc-500 text-sm font-medium">
+                        <span class="text-cyan-400 font-bold">$23.000/mes</span> · Precio congelado 12 meses · Garantía 20 días · 
+                        <span class="line-through">$38.999</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 10: FAQ DE OBJECIONES                -->
+        <!-- ============================================ -->
+        <section class="py-20 sm:py-28 bg-zinc-950">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <div class="text-center mb-12 reveal">
+                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-2">
+                        Preguntas que te estás haciendo
+                    </h2>
+                    <p class="text-zinc-500 text-base font-medium">(y respuestas honestas)</p>
+                </div>
+                
+                <div class="space-y-3 reveal">
+                    <!-- FAQ 1 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"No soy de tecnología. ¿Voy a saber usarlo?"</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">Si usás WhatsApp, sabés usar QBITS. La IA te guía con el lenguaje de todos los días. No hay manuales ni curvas de aprendizaje. Te configuramos todo, te acompañamos paso a paso, y en 15 minutos ya estás vendiendo. Ricardo tiene 45 años y no usaba ni Excel — en una hora ya controlaba todo desde el celular.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 2 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"$23.000 es mucha plata para un kiosco."</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">Entendemos. Pero pensalo así: son $767 por día. Menos que un paquete de alfajores. Y si hoy perdés aunque sea $100.000/mes entre merma, afano y diferencias de caja (y probablemente perdés mucho más), QBITS se paga solo 5 veces. Con la garantía de 20 días, si no te sirve te devolvemos todo. Literalmente no podés perder plata probando.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 3 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"Ya me manejo con el cuaderno de toda la vida."</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">Pregunta honesta: ¿podés ver ahora mismo desde tu celular cuánto vendiste hoy? ¿Sabés cuál es tu producto más rentable? ¿Sabés si tu empleado registró todas las ventas? Si la respuesta es "no", el cuaderno te da una ilusión de control, no control real. QBITS no reemplaza tu cuaderno: te da la visión completa que el cuaderno nunca te va a poder dar.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 4 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"Mi kiosco es chico, ¿sirve igual?"</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">Justamente. En un kiosco chico cada peso cuenta más. Si perdés $500.000/mes en un kiosco que factura $3.000.000, estás regalando casi el 20% de tu ingreso. QBITS está diseñado para kioscos de todos los tamaños — desde el de barrio hasta el maxikiosco con 3.000 productos.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 5 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"¿Necesito una computadora o algo especial?"</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">No. Solo tu celular. Vendés, facturás, controlás stock, ves reportes, todo desde el teléfono. Si querés usar una tablet o PC también podés, pero no hace falta. Ni impresora necesitás — aunque si tenés una Bluetooth, imprimís tickets.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 6 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"¿Y si después sube el precio?"</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">Si activás ahora, tu precio queda congelado en $23.000/mes por 12 meses. No importa si el precio normal sube a $40.000 o $50.000 — vos pagás lo mismo. Es la ventaja de entrar ahora mientras dura la promo de lanzamiento.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 7 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"¿Tiene facturación electrónica?"</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">Sí. Facturación ARCA (ex AFIP) integrada. Emitís facturas A, B y C desde el celular. También imprimís tickets por Bluetooth. 100% legal y al día.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 8 -->
+                    <div class="border border-white/10 rounded-xl overflow-hidden bg-zinc-900/20">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-5 text-left hover:bg-white/3 transition-colors">
+                            <span class="text-base font-bold text-white pr-6">"¿Qué pasa si no me sirve?"</span>
+                            <span class="text-xl text-cyan-500 faq-toggle flex-shrink-0">+</span>
+                        </button>
+                        <div class="faq-content px-5 pb-0">
+                            <p class="text-zinc-400 pb-5 text-sm leading-relaxed">Tenés 20 días para probarlo. Si no te convence, te devolvemos el 100% de tu plata. Sin preguntas, sin vueltas, sin letra chica. El riesgo es cero para vos.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final micro CTA -->
+                <div class="mt-12 text-center reveal">
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" 
+                       class="btn-cta inline-flex items-center justify-center rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-lg h-14 px-10 shadow-[0_0_40px_rgba(147,51,234,0.3)] transition-all">
+                        ACTIVAR QBITS — $23.000/MES
+                    </a>
+                    <p class="text-zinc-600 text-xs mt-3">Garantía 20 días · Sin permanencia · Precio congelado 12 meses</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full bg-black border-t border-white/5 py-10 px-4">
+        <div class="max-w-5xl mx-auto flex flex-col items-center gap-6">
+            <div class="flex items-center gap-3">
+                <img alt="QBITS" height="28" width="28" src="https://qbitsapp.com/images/logo.png" class="rounded">
+                <span class="font-black text-white text-lg tracking-tighter">QBITS Kioscos</span>
+            </div>
+            <p class="text-zinc-600 text-sm text-center max-w-md">
+                El sistema de gestión con IA hecho para kioscos y maxikioscos argentinos. 
+                Control de stock, caja blindada, alertas inteligentes y ganancia real — desde tu celular.
+            </p>
+            <a href="https://wa.me/5491136444546?text=%C2%A1Hola!%20Vi%20la%20oferta%20de%20QBITS%20para%20kioscos%20y%20quiero%20m%C3%A1s%20info." 
+               target="_blank" rel="noopener noreferrer" 
+               class="flex items-center gap-2 text-green-400 border border-green-500/20 px-5 py-2.5 rounded-full hover:bg-green-500/10 transition-all text-sm font-bold">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                Escribinos por WhatsApp
+            </a>
+            <p class="text-zinc-700 text-[10px] uppercase tracking-[0.2em]">© 2026 QBits Argentina. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- FLOATING WhatsApp -->
+    <a href="https://wa.me/5491136444546?text=%C2%A1Hola!%20Vi%20la%20oferta%20de%20QBITS%20para%20kioscos%20y%20quiero%20m%C3%A1s%20info." 
+       target="_blank" rel="noopener noreferrer" 
+       class="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(34,197,94,0.5)] transition-all hover:scale-110">
+        <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <script>
+        // ==========================================
+        // COUNTDOWN TIMER (persistent via localStorage)
+        // ==========================================
+        function initCountdown() {
+            const KEY = 'qbits_kiosco_closer_cd';
+            const KEY_TIME = 'qbits_kiosco_closer_cd_time';
+            let totalSeconds;
+            
+            const stored = localStorage.getItem(KEY);
+            const storedTime = localStorage.getItem(KEY_TIME);
+            
+            if (stored && storedTime) {
+                const elapsed = Math.floor((Date.now() - parseInt(storedTime)) / 1000);
+                totalSeconds = Math.max(0, parseInt(stored) - elapsed);
+            } else {
+                totalSeconds = 24 * 3600 + Math.floor(Math.random() * 59) * 60 + Math.floor(Math.random() * 59);
+                localStorage.setItem(KEY, totalSeconds);
+                localStorage.setItem(KEY_TIME, Date.now());
+            }
+            
+            function update() {
+                if (totalSeconds <= 0) {
+                    totalSeconds = 24 * 3600 + Math.floor(Math.random() * 59) * 60;
+                    localStorage.setItem(KEY, totalSeconds);
+                    localStorage.setItem(KEY_TIME, Date.now());
+                }
+                
+                const h = Math.floor(totalSeconds / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                const s = totalSeconds % 60;
+                const hh = h.toString().padStart(2, '0');
+                const mm = m.toString().padStart(2, '0');
+                const ss = s.toString().padStart(2, '0');
+                
+                const navCd = document.getElementById('nav-countdown');
+                const cdH = document.getElementById('cd-hours');
+                const cdM = document.getElementById('cd-minutes');
+                const cdS = document.getElementById('cd-seconds');
+                
+                if (navCd) navCd.textContent = hh + ':' + mm + ':' + ss;
+                if (cdH) cdH.textContent = hh;
+                if (cdM) cdM.textContent = mm;
+                if (cdS) cdS.textContent = ss;
+                
+                totalSeconds--;
+                setTimeout(update, 1000);
+            }
+            
+            update();
+        }
+        
+        // ==========================================
+        // FAQ TOGGLE
+        // ==========================================
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('.faq-toggle');
+            content.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+        
+        // ==========================================
+        // SCROLL REVEAL
+        // ==========================================
+        function initReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+        
+        // ==========================================
+        // SMOOTH SCROLL
+        // ==========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // ==========================================
+        // META PIXEL TRACKING
+        // ==========================================
+        document.querySelectorAll('a[href*="mercadopago"]').forEach(link => {
+            link.addEventListener('click', function() {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'InitiateCheckout', {
+                        content_name: 'QBITS Kiosco Closer',
+                        content_category: 'Kiosco',
+                        value: 23000,
+                        currency: 'ARS'
+                    });
+                }
+            });
+        });
+        
+        document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+            link.addEventListener('click', function() {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Contact', {
+                        content_name: 'QBITS Kiosco WhatsApp',
+                        content_category: 'Kiosco'
+                    });
+                }
+            });
+        });
+        
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initCountdown();
+            initReveal();
+        });
+    </script>
+<script>
+// Meta CAPI data capture - adds fbc, fbp to MP checkout links
+(function(){function getCookie(n){var m=document.cookie.match(new RegExp("(^| )"+n+"=([^;]+)"));return m?m[2]:"";}document.addEventListener("click",function(e){var l=e.target.closest("a[href*=\"mercadopago\"]");if(l){var u=new URL(l.href);var fbc=getCookie("_fbc");var fbp=getCookie("_fbp");if(fbc)u.searchParams.set("fbc",fbc);if(fbp)u.searchParams.set("fbp",fbp);var p=new URLSearchParams(window.location.search);var fc=p.get("fbclid");if(fc&&!fbc)u.searchParams.set("fbc","fb.1."+Date.now()+"."+fc);l.href=u.toString();}});})();
+</script></body>
+</html>

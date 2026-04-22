@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qbits - Kioscos - El sistema #1 para Kioscos en Argentina</title>
+    <meta name="description" content="Sistema de gestión con IA para kioscos y polirrubros. Control de stock, caja blindada, facturación ARCA, reportes de ganancia. Foto a la factura → stock cargado. Desde $23.000/mes.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Meta Pixel Code + Parameter Builder (client-side) -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      // Advanced Matching: capture URL params if available (from GHL/CRM links)
+      (function(){
+        var params = new URLSearchParams(window.location.search);
+        var matchData = {};
+        if (params.get('email')) matchData.em = params.get('email');
+        if (params.get('phone')) matchData.ph = params.get('phone');
+        if (params.get('name')) {
+          var parts = params.get('name').split(' ');
+          matchData.fn = parts[0] || '';
+          matchData.ln = parts.slice(1).join(' ') || '';
+        }
+        if (params.get('fn')) matchData.fn = params.get('fn');
+        if (params.get('ln')) matchData.ln = params.get('ln');
+        if (params.get('country')) matchData.country = params.get('country');
+        if (params.get('external_id')) matchData.external_id = params.get('external_id');
+
+        if (Object.keys(matchData).length > 0) {
+          fbq('init', '966854009200030', matchData);
+        } else {
+          fbq('init', '966854009200030');
+        }
+      })();
+      fbq('track', 'PageView');
+
+      /* Parameter Builder: capture _fbc and _fbp early + generate from fbclid */
+      (function(){
+        function getCk(n){var m=document.cookie.match(new RegExp("(^| )"+n+"=([^;]+)"));return m?m[2]:"";}
+        function setCk(n,v,d){var e=new Date();e.setTime(e.getTime()+(d||30)*86400000);document.cookie=n+"="+v+";expires="+e.toUTCString()+";path=/;SameSite=Lax";}
+        /* Generate _fbc from fbclid if not present */
+        var fbclid=(new URLSearchParams(window.location.search)).get("fbclid");
+        if(fbclid&&!getCk("_fbc")){setCk("_fbc","fb.1."+Date.now()+"."+fbclid,90);}
+        /* Ensure _fbp exists */
+        if(!getCk("_fbp")){setCk("_fbp","fb.1."+Date.now()+"."+Math.floor(1e9*Math.random()),180);}
+        /* Store cookies in window for downstream use */
+        window.__meta_fbc=getCk("_fbc");
+        window.__meta_fbp=getCk("_fbp");
+      })();
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=966854009200030&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'Inter', system-ui, sans-serif; background: #000; color: #fff; overflow-x: hidden; }
+      ::selection { background: rgba(6,182,212,0.3); }
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+      @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+      .animate-pulse { animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+      .animate-ping { animation: ping 1s cubic-bezier(0,0,0.2,1) infinite; }
+      .animate-float { animation: float 3s ease-in-out infinite; }
+      .btn-primary { transition: all 0.3s; transform: scale(1); }
+      .btn-primary:hover { transform: scale(1.05); }
+      .card-hover { transition: all 0.5s; }
+      .card-hover:hover { border-color: rgba(239,68,68,0.3); }
+      .card-hover-cyan:hover { border-color: rgba(6,182,212,0.5); }
+      .feature-card:hover .feature-icon { transform: scale(1.1); }
+      .feature-icon { transition: transform 0.3s; }
+      .testimonial-img { filter: grayscale(100%); transition: all 0.5s; }
+      .group:hover .testimonial-img { filter: grayscale(0%); }
+      .faq-item { transition: all 0.3s; }
+      .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+      .faq-content.open { max-height: 500px; }
+      .faq-toggle { transition: transform 0.3s; }
+      .faq-toggle.open { transform: rotate(45deg); }
+      /* Countdown timer */
+      .countdown-digit { 
+        background: rgba(0,0,0,0.3); 
+        backdrop-filter: blur(12px); 
+        border: 1px solid rgba(255,255,255,0.1); 
+        padding: 2px 8px; 
+        border-radius: 6px; 
+        min-width: 28px; 
+        text-align: center; 
+        font-family: monospace; 
+        font-size: 1rem; 
+      }
+    </style>
+</head>
+<body>
+    <!-- MOBILE URGENCY BANNER -->
+    <div class="md:hidden fixed top-0 left-0 right-0 z-[60] flex flex-col items-center">
+        <div class="w-full max-w-sm mx-auto bg-gradient-to-r from-orange-600 via-red-600 to-rose-600 text-white pt-2 pb-3 px-4 rounded-b-[1.5rem] shadow-[0_10px_40px_-10px_rgba(244,63,94,0.5)] flex flex-col items-center justify-center gap-1 relative">
+            <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; viewBox=&quot;0 0 40 40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;%23fff&quot; fill-opacity=&quot;0.05&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot;/%3E%3C/g%3E%3C/svg%3E');"></div>
+            <div class="flex items-center gap-2 relative z-10">
+                <div class="w-2 h-2 bg-yellow-300 rounded-full animate-pulse shadow-[0_0_8px_rgba(253,224,71,0.8)]"></div>
+                <span class="text-[10px] font-black uppercase tracking-widest drop-shadow-md">Oferta por tiempo limitado</span>
+                <div class="w-2 h-2 bg-yellow-300 rounded-full animate-pulse shadow-[0_0_8px_rgba(253,224,71,0.8)]"></div>
+            </div>
+            <div class="flex items-center gap-2 text-sm font-bold relative z-10 text-white">
+                <span class="opacity-90">Termina en</span>
+                <div class="flex items-center gap-1">
+                    <span class="countdown-digit" id="mobile-hours">07</span>
+                    <span class="animate-pulse">:</span>
+                    <span class="countdown-digit" id="mobile-minutes">28</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10 h-20 flex items-center">
+        <div class="max-w-7xl mx-auto w-full px-4 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group transition-transform hover:scale-105">
+                <img alt="Logo" height="42" width="42" src="https://qbitsapp.com/images/logo.png" class="rounded">
+                <p class="font-black text-white text-2xl tracking-tighter">Kiosco</p>
+            </a>
+            <!-- Desktop countdown -->
+            <div class="hidden lg:flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-4 py-1.5">
+                <div class="flex items-center gap-2">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+                    </span>
+                </div>
+                <div class="font-mono text-xl font-black text-white tabular-nums tracking-tight" id="desktop-countdown">07:28</div>
+            </div>
+            <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" class="h-11 px-6 flex items-center text-sm font-black text-black bg-cyan-400 hover:bg-cyan-300 shadow-[0_0_30px_rgba(6,182,212,0.4)] transition-all duration-300 rounded-lg uppercase tracking-wider">COMPRAR Ahora</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="relative min-h-[90vh] flex items-center justify-center pt-38 pb-20 lg:py-24 overflow-hidden bg-black">
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-cyan-500/20 rounded-full blur-[120px] opacity-40 mix-blend-screen"></div>
+                <div class="absolute bottom-0 right-0 w-[800px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] opacity-30 mix-blend-screen"></div>
+                <div class="absolute inset-0 opacity-20" style="background-size: 50px 50px; background-position: center; mask-image: radial-gradient(ellipse at center, white, transparent 70%); -webkit-mask-image: radial-gradient(ellipse at center, white, transparent 70%); background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);"></div>
+            </div>
+            <div class="container mx-auto px-4 relative z-10 flex flex-col items-center text-center max-w-6xl">
+                <div class="flex flex-col items-center gap-8 md:gap-10">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/30 bg-red-950/30 mb-2 backdrop-blur-md">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,1)]"></span>
+                        </span>
+                        <span class="text-xs md:text-sm font-bold text-red-300 tracking-widest uppercase">Precio congelado x 12 meses</span>
+                    </div>
+
+                    <!-- Headline -->
+                    <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black leading-[1.05] sm:leading-[0.95] tracking-tight sm:tracking-tighter text-white max-w-5xl">
+                        2026 y ¿todavía <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-b from-cyan-400 to-cyan-600 drop-shadow-[0_0_30px_rgba(6,182,212,0.3)]">sin IA en tu KIOSCO?</span>
+                    </h1>
+
+                    <!-- Subheadline -->
+                    <p class="text-base sm:text-xl lg:text-3xl text-zinc-200 max-w-4xl leading-relaxed font-bold px-4 sm:px-0 mt-4">
+                        Sacás una foto a la FACTURA y la IA carga todo el stock de tu compra. <br class="hidden sm:block">
+                        <span class="text-zinc-500 font-medium">Mientras otros siguen con cuaderno, vos ya tenés todo controlado desde el celular.</span>
+                    </p>
+
+                    <!-- Value prop -->
+                    <p class="text-cyan-400 text-lg sm:text-2xl font-black uppercase tracking-tighter bg-cyan-950/20 px-6 py-2 rounded-lg border border-cyan-500/20">
+                        🤑 Recuperá lo que hoy perdés en compras mal hechas en menos de 3 meses.
+                    </p>
+
+                    <!-- CTA -->
+                    <div class="flex flex-col items-center gap-6 mt-4 w-full justify-center">
+                        <div class="w-full sm:w-auto">
+                            <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" 
+                               class="btn-primary block rounded-full bg-cyan-500 hover:bg-cyan-400 text-black shadow-[0_0_60px_rgba(6,182,212,0.4)] h-16 sm:h-24 px-8 sm:px-16 text-xl sm:text-4xl font-black w-full uppercase tracking-tighter flex items-center justify-center">
+                                ACTIVÁ TU KIOSCO INTELIGENTE
+                            </a>
+                        </div>
+                        <p class="text-zinc-400 font-bold text-sm sm:text-lg flex items-center gap-2">🧾 20 días de GARANTÍA - DEVOLUCIÓN del 100%</p>
+                    </div>
+
+                    <!-- Video mockup -->
+                    <div class="relative mt-8 group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-[2.5rem] blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
+                        <div class="relative rounded-[2.5rem] border-[8px] border-zinc-900 bg-black overflow-hidden shadow-2xl w-[280px] sm:w-[320px]" style="aspect-ratio: 9/19;">
+                            <video autoplay muted loop playsinline class="w-full h-full object-cover">
+                                <source src="https://pub-1ee8b00ceed2443c917a8188cf6ed6a4.r2.dev/videos-publicitarios/kioskos/publicitario1.mp4" type="video/mp4">
+                            </video>
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-zinc-900 rounded-b-2xl z-20"></div>
+                        </div>
+                    </div>
+
+                    <!-- Feature grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-8 w-full max-w-5xl">
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <span class="text-3xl mb-2 feature-icon block">🛡️</span>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Caja Blindada</span>
+                            <span class="text-zinc-500 text-xs mt-1">Cero diferencias</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <div class="h-10 flex items-center justify-center mb-2">
+                                <img alt="Gestión con IA" class="h-full object-contain feature-icon rounded" height="40" width="40" loading="lazy" src="https://qbitsapp.com/images/ia.jpg">
+                            </div>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Gestión con IA</span>
+                            <span class="text-zinc-500 text-xs mt-1">Inteligencia Artificial</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <span class="text-3xl mb-2 feature-icon block">📦</span>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Stock Inteligente</span>
+                            <span class="text-zinc-500 text-xs mt-1">Alertas de faltantes</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <div class="h-10 flex items-center justify-center mb-2">
+                                <img alt="Pagos QR" class="h-full object-contain feature-icon rounded" height="40" width="40" loading="lazy" src="https://qbitsapp.com/images/mp.webp">
+                            </div>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Pagos QR</span>
+                            <span class="text-zinc-500 text-xs mt-1">Mercado Pago</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <div class="h-10 flex items-center justify-center mb-2">
+                                <img alt="Factura ARCA" class="h-full object-contain feature-icon rounded" height="40" width="40" loading="lazy" src="https://qbitsapp.com/images/arca.jpg">
+                            </div>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Factura ARCA</span>
+                            <span class="text-zinc-500 text-xs mt-1">100% Legal</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <span class="text-3xl mb-2 feature-icon block">📊</span>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Reportes</span>
+                            <span class="text-zinc-500 text-xs mt-1">Ganancia real</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <span class="text-3xl mb-2 feature-icon block">🛒</span>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Compras</span>
+                            <span class="text-zinc-500 text-xs mt-1">Repone stock</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm group card-hover-cyan transition-all text-center">
+                            <span class="text-3xl mb-2 feature-icon block">📱</span>
+                            <span class="text-white font-bold text-sm sm:text-base uppercase tracking-tight">Control Celular</span>
+                            <span class="text-zinc-500 text-xs mt-1">Desde cualquier lado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEMO SECTION -->
+        <section id="demo" class="py-40 bg-black overflow-hidden relative">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[500px] bg-gradient-to-b from-cyan-500/10 to-transparent blur-[100px] pointer-events-none"></div>
+            <div class="container mx-auto px-4 relative z-10 text-center">
+                <div class="mb-16">
+                    <h2 class="text-4xl md:text-6xl font-black bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500 uppercase tracking-tighter">Vendé, cobrá e imprimí <br> desde tu celular.</h2>
+                    <p class="mt-4 text-zinc-400 text-lg sm:text-xl font-medium max-w-2xl mx-auto">Mirá cómo facturar un producto y emitir el ticket por Bluetooth en segundos. Sin cables, sin PC, sin complicaciones.</p>
+                </div>
+                <div class="relative max-w-sm mx-auto group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                    <div class="relative rounded-[3rem] border-[12px] border-zinc-900 bg-black overflow-hidden shadow-2xl" style="aspect-ratio: 9/19;">
+                        <video autoplay muted loop playsinline controls class="w-full h-full object-cover">
+                            <source src="purchase-lite.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-7 bg-zinc-900 rounded-b-3xl z-20"></div>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-24">
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" class="btn-primary inline-flex items-center justify-center rounded-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold shadow-[0_0_40px_rgba(6,182,212,0.3)] px-6 py-4 text-medium">EMPEZAR AHORA</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- IA SECTION -->
+        <section id="ia" class="relative py-24 overflow-hidden border-t border-white/5">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/3 pointer-events-none"></div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="flex flex-col lg:flex-row items-center gap-16">
+                    <div class="w-full lg:w-1/2 flex flex-col items-start">
+                        <div class="w-full">
+                            <div class="inline-flex items-center px-3 py-1 rounded-full mb-6 bg-red-500/10 border border-red-500/20 text-red-500 font-bold uppercase tracking-widest text-xs">LA IA QUE TE HACE LA GUERRA 🤖</div>
+                            <h2 class="text-5xl md:text-7xl font-black text-white mb-6 leading-[1] tracking-tighter text-left uppercase">
+                                Dejá de ser <br>
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">esclavo de tu KIOSCO.</span>
+                            </h2>
+                            <p class="text-lg md:text-2xl text-zinc-400 mb-10 leading-relaxed font-bold text-left">
+                                Mientras otros cargan facturas a mano y pierden mercadería, vos ya estás ganando 
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500 uppercase">TIEMPO Y DINERO.</span>
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full text-left font-bold">
+                                <div class="flex flex-col gap-2 group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-2xl">📸</span>
+                                        <h3 class="text-white font-black text-base md:text-lg uppercase tracking-tight group-hover:text-red-500 transition-colors leading-tight">Foto a la factura → Stock cargado</h3>
+                                    </div>
+                                    <p class="text-zinc-500 text-sm leading-snug font-medium">Se acabó el tipear. Una foto y el stock se actualiza solo en 3 segundos.</p>
+                                </div>
+                                <div class="flex flex-col gap-2 group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-2xl">💬</span>
+                                        <h3 class="text-white font-black text-base md:text-lg uppercase tracking-tight group-hover:text-red-500 transition-colors leading-tight">Preguntale '¿cuánto vendí?'</h3>
+                                    </div>
+                                    <p class="text-zinc-500 text-sm leading-snug font-medium">Te responde por chat como un humano. Control total sin mirar planillas.</p>
+                                </div>
+                                <div class="flex flex-col gap-2 group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-2xl">📊</span>
+                                        <h3 class="text-white font-black text-base md:text-lg uppercase tracking-tight group-hover:text-red-500 transition-colors leading-tight">Ganancia real por producto</h3>
+                                    </div>
+                                    <p class="text-zinc-500 text-sm leading-snug font-medium">Sabé exactamente cuánto te deja cada golosina, cada gaseosa, cada cigarrillo.</p>
+                                </div>
+                                <div class="flex flex-col gap-2 group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-2xl">👨‍🏫</span>
+                                        <h3 class="text-white font-black text-base md:text-lg uppercase tracking-tight group-hover:text-red-500 transition-colors leading-tight">Aprendé sin leer manuales</h3>
+                                    </div>
+                                    <p class="text-zinc-500 text-sm leading-snug font-medium">Te enseña a usar el sistema hablándote. Cero curva de aprendizaje.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/2 relative group">
+                        <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(239,68,68,0.1)]">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-red-500/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                            <img alt="Inteligencia Artificial en QBits" class="w-full aspect-square md:aspect-auto object-cover transform group-hover:scale-105 transition-transform duration-1000" height="600" loading="lazy" src="https://qbitsapp.com/images/ia.jpg" width="800">
+                            <div class="absolute bottom-3 left-3 right-3 md:bottom-6 md:left-6 md:right-6 p-3 md:p-6 rounded-xl md:rounded-2xl bg-black/70 backdrop-blur-xl border border-white/10 z-20">
+                                <div class="flex items-center gap-3 md:gap-4">
+                                    <div class="hidden md:flex -space-x-3">
+                                        <div class="w-10 h-10 rounded-full border-2 border-red-500 bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-white shadow-lg">IA</div>
+                                        <div class="w-10 h-10 rounded-full border-2 border-red-500 bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-white shadow-lg">IA</div>
+                                        <div class="w-10 h-10 rounded-full border-2 border-red-500 bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-white shadow-lg">IA</div>
+                                    </div>
+                                    <div class="text-left">
+                                        <h4 class="text-white font-bold text-xs md:text-sm">Poder Inteligente QBits</h4>
+                                        <p class="text-red-400 text-[10px] md:text-xs font-black animate-pulse uppercase">Cargando stock de golosinas...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -top-4 -right-4 md:-top-6 md:-left-6 px-4 py-2 md:px-6 md:py-3 rounded-full bg-red-600 text-white font-black text-[10px] md:text-sm shadow-[0_20px_40px_rgba(220,38,38,0.4)] z-30 animate-float">2026 TECHNOLOGY</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROBLEMA SECTION -->
+        <section id="problema" class="py-32 bg-black relative">
+            <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px); background-size: 50px 50px;"></div>
+            <div class="container mx-auto px-4 max-w-6xl relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl lg:text-7xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-600 uppercase tracking-tighter">Si hoy seguís así, <br> estás perdiendo plata.</h2>
+                    <p class="text-zinc-500 text-lg sm:text-2xl font-bold uppercase tracking-[0.1em]">Esta app es para vos si:</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-zinc-900/50 backdrop-blur-md rounded-3xl p-8 border border-white/5 card-hover transition-all duration-500 group">
+                        <div class="flex flex-col gap-4">
+                            <span class="text-3xl grayscale group-hover:grayscale-0 transition-all">❌</span>
+                            <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight">¿Tu empleado te roba y no lo podés probar?</h3>
+                            <p class="text-zinc-400 leading-relaxed text-sm font-medium">Sin caja blindada, no sabés si las diferencias son errores o robos. Cada peso sin control es un peso perdido.</p>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/50 backdrop-blur-md rounded-3xl p-8 border border-white/5 card-hover transition-all duration-500 group">
+                        <div class="flex flex-col gap-4">
+                            <span class="text-3xl grayscale group-hover:grayscale-0 transition-all">❌</span>
+                            <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight">¿Cargás facturas a mano producto por producto?</h3>
+                            <p class="text-zinc-400 leading-relaxed text-sm font-medium">Perdés horas cargando cada golosina, cada gaseosa, cada cigarrillo. Y encima te equivocás.</p>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/50 backdrop-blur-md rounded-3xl p-8 border border-white/5 card-hover transition-all duration-500 group">
+                        <div class="flex flex-col gap-4">
+                            <span class="text-3xl grayscale group-hover:grayscale-0 transition-all">❌</span>
+                            <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight">¿No sabés qué productos te dejan ganancia?</h3>
+                            <p class="text-zinc-400 leading-relaxed text-sm font-medium">Vendés de todo pero al final del mes no sabés cuánto ganaste ni qué producto rinde.</p>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/50 backdrop-blur-md rounded-3xl p-8 border border-white/5 card-hover transition-all duration-500 group">
+                        <div class="flex flex-col gap-4">
+                            <span class="text-3xl grayscale group-hover:grayscale-0 transition-all">❌</span>
+                            <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight">¿Se te vencen productos sin darte cuenta?</h3>
+                            <p class="text-zinc-400 leading-relaxed text-sm font-medium">Mercadería vencida es plata tirada. Sin alertas de stock, perdés sin saber.</p>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/50 backdrop-blur-md rounded-3xl p-8 border border-white/5 card-hover transition-all duration-500 group">
+                        <div class="flex flex-col gap-4">
+                            <span class="text-3xl grayscale group-hover:grayscale-0 transition-all">❌</span>
+                            <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight">¿No podés dejar el kiosco ni un día?</h3>
+                            <p class="text-zinc-400 leading-relaxed text-sm font-medium">Si no estás, no sabés qué pasa. No podés irte tranquilo porque no tenés control remoto.</p>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-900/50 backdrop-blur-md rounded-3xl p-8 border border-white/5 card-hover transition-all duration-500 group">
+                        <div class="flex flex-col gap-4">
+                            <span class="text-3xl grayscale group-hover:grayscale-0 transition-all">❌</span>
+                            <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight">¿El cierre de caja nunca te da?</h3>
+                            <p class="text-zinc-400 leading-relaxed text-sm font-medium">Tardás horas contando y nunca cuadra. Siempre falta plata y no sabés por qué.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-24">
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" class="btn-primary inline-flex items-center justify-center rounded-full bg-zinc-800 text-white hover:bg-white hover:text-black border border-white/20 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] px-6 py-4 font-bold">SOLUCIONAR ESTO AHORA</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIOS SECTION -->
+        <section id="testimonios" class="py-24 bg-zinc-950 relative overflow-hidden">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-900/10 rounded-full blur-[150px]"></div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-7xl font-black text-white mb-4 uppercase tracking-tighter">Ellos ya <span class="text-red-500">dejaron el cuaderno</span></h2>
+                    <p class="text-zinc-400 text-lg sm:text-2xl max-w-3xl mx-auto font-bold">Historias de kiosqueros que se cansaron de trabajar como en el 2000 y hoy controlan todo con IA.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-black/40 backdrop-blur-md border border-white/5 p-8 rounded-2xl hover:border-red-500/30 transition-colors group">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500/50 mb-6 group-hover:border-red-500 transition-colors shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            <img alt="Martín D." class="w-full h-full object-cover testimonial-img" height="64" loading="lazy" src="https://i.pravatar.cc/150?u=martin" width="64">
+                        </div>
+                        <p class="text-zinc-300 italic mb-6 leading-relaxed font-bold text-lg">"Le saco foto a la factura del mayorista y en 3 segundos tengo todo el stock cargado. Antes tardaba toda la mañana."</p>
+                        <div class="border-t border-white/5 pt-4">
+                            <p class="text-white font-black uppercase">Martín D.</p>
+                            <p class="text-xs text-red-500 uppercase tracking-widest font-black">Polirrubro — Lanús</p>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 backdrop-blur-md border border-white/5 p-8 rounded-2xl hover:border-red-500/30 transition-colors group">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500/50 mb-6 group-hover:border-red-500 transition-colors shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            <img alt="Carolina S." class="w-full h-full object-cover testimonial-img" height="64" loading="lazy" src="https://i.pravatar.cc/150?u=carolina" width="64">
+                        </div>
+                        <p class="text-zinc-300 italic mb-6 leading-relaxed font-bold text-lg">"Descubrí que mi empleado me estaba robando $80.000 por mes. La caja blindada no perdona."</p>
+                        <div class="border-t border-white/5 pt-4">
+                            <p class="text-white font-black uppercase">Carolina S.</p>
+                            <p class="text-xs text-red-500 uppercase tracking-widest font-black">Kiosco 24hs — Floresta</p>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 backdrop-blur-md border border-white/5 p-8 rounded-2xl hover:border-red-500/30 transition-colors group">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500/50 mb-6 group-hover:border-red-500 transition-colors shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            <img alt="Gabriel R." class="w-full h-full object-cover testimonial-img" height="64" loading="lazy" src="https://i.pravatar.cc/150?u=gabriel" width="64">
+                        </div>
+                        <p class="text-zinc-300 italic mb-6 leading-relaxed font-bold text-lg">"Ahora sé qué golosinas me dejan ganancia y cuáles no. Dejé de comprar lo que no se vende."</p>
+                        <div class="border-t border-white/5 pt-4">
+                            <p class="text-white font-black uppercase">Gabriel R.</p>
+                            <p class="text-xs text-red-500 uppercase tracking-widest font-black">Maxikiosco — Quilmes</p>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 backdrop-blur-md border border-white/5 p-8 rounded-2xl hover:border-red-500/30 transition-colors group">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500/50 mb-6 group-hover:border-red-500 transition-colors shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            <img alt="Susana L." class="w-full h-full object-cover testimonial-img" height="64" loading="lazy" src="https://i.pravatar.cc/150?u=susana" width="64">
+                        </div>
+                        <p class="text-zinc-300 italic mb-6 leading-relaxed font-bold text-lg">"Le pregunto a la IA '¿cuánto vendí hoy?' y me responde al toque. Controlo todo desde la casa."</p>
+                        <div class="border-t border-white/5 pt-4">
+                            <p class="text-white font-black uppercase">Susana L.</p>
+                            <p class="text-xs text-red-500 uppercase tracking-widest font-black">Kiosco y Regalería — Lomas de Zamora</p>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 backdrop-blur-md border border-white/5 p-8 rounded-2xl hover:border-red-500/30 transition-colors group">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500/50 mb-6 group-hover:border-red-500 transition-colors shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            <img alt="Oscar P." class="w-full h-full object-cover testimonial-img" height="64" loading="lazy" src="https://i.pravatar.cc/150?u=oscar" width="64">
+                        </div>
+                        <p class="text-zinc-300 italic mb-6 leading-relaxed font-bold text-lg">"Pensé que iba a ser difícil pero la IA te enseña todo. En una hora ya estaba vendiendo con el sistema."</p>
+                        <div class="border-t border-white/5 pt-4">
+                            <p class="text-white font-black uppercase">Oscar P.</p>
+                            <p class="text-xs text-red-500 uppercase tracking-widest font-black">Polirrubro y Librería — Banfield</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-20">
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" class="btn-primary inline-flex items-center justify-center rounded-full w-full sm:w-auto bg-red-600 hover:bg-red-500 text-white font-black px-8 sm:px-12 py-4 sm:py-8 text-xl sm:text-2xl shadow-[0_0_30px_rgba(220,38,38,0.3)] uppercase tracking-tighter">QUIERO EL MISMO CONTROL EN MI KIOSCO</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPARATIVA SECTION -->
+        <section id="comparativa" class="py-12 bg-zinc-950 relative overflow-hidden">
+            <div class="container mx-auto px-4 max-w-7xl">
+                <div class="text-center mb-12 sm:mb-16">
+                    <h2 class="text-3xl sm:text-4xl md:text-7xl font-black text-white mb-4 uppercase tracking-tighter leading-tight">¿Cuaderno o <br><span class="text-cyan-500 underline decoration-red-500/50 decoration-wavy underline-offset-8">Negocio de verdad?</span></h2>
+                    <p class="text-zinc-400 text-base sm:text-2xl font-bold uppercase tracking-tight">Todo lo que hoy hacés a ojo, pasado a números claros y control real.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 relative z-10">
+                    <div class="flex flex-col gap-6 sm:gap-8 p-6 sm:p-10 rounded-3xl bg-zinc-900/50 border border-white/10 hover:bg-zinc-800/50 transition-colors">
+                        <h3 class="text-2xl sm:text-3xl font-black text-zinc-400 line-through decoration-red-500/50 uppercase italic tracking-tighter">EL PASADO (CHAU CUADERNO)</h3>
+                        <ul class="space-y-4 sm:space-y-6">
+                            <li class="text-zinc-500 flex items-start gap-3 text-base sm:text-xl font-bold italic"><span class="text-red-500 text-xl">❌</span> Mercadería que desaparece sin explicación</li>
+                            <li class="text-zinc-500 flex items-start gap-3 text-base sm:text-xl font-bold italic"><span class="text-red-500 text-xl">❌</span> Empleados que hacen lo que quieren con la caja</li>
+                            <li class="text-zinc-500 flex items-start gap-3 text-base sm:text-xl font-bold italic"><span class="text-red-500 text-xl">❌</span> Cargar facturas a mano durante horas</li>
+                            <li class="text-zinc-500 flex items-start gap-3 text-base sm:text-xl font-bold italic"><span class="text-red-500 text-xl">❌</span> No saber qué productos te dejan ganancia</li>
+                            <li class="text-zinc-500 flex items-start gap-3 text-base sm:text-xl font-bold italic"><span class="text-red-500 text-xl">❌</span> No poder dejar el kiosco ni un día</li>
+                            <li class="text-zinc-500 flex items-start gap-3 text-base sm:text-xl font-bold italic"><span class="text-red-500 text-xl">❌</span> Productos que se vencen sin darte cuenta</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col gap-6 sm:gap-8 p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-cyan-900/20 to-purple-900/20 border border-cyan-500/30 relative">
+                        <div class="absolute top-0 right-0 p-4">
+                            <span class="bg-cyan-500 text-black text-xs font-black px-4 py-1 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(6,182,212,0.4)]">Recomendado</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-4xl font-black text-white bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-white uppercase italic tracking-tighter">KIOSCO CON &nbsp; IA</h3>
+                        <ul class="space-y-4 sm:space-y-6">
+                            <li class="flex items-start gap-3 text-base sm:text-xl text-white font-black uppercase tracking-tight"><span class="text-cyan-400 font-bold text-xl">✅</span> Stock actualizado en tiempo real</li>
+                            <li class="flex items-start gap-3 text-base sm:text-xl text-white font-black uppercase tracking-tight"><span class="text-cyan-400 font-bold text-xl">✅</span> Caja blindada: cada peso controlado</li>
+                            <li class="flex items-start gap-3 text-base sm:text-xl text-white font-black uppercase tracking-tight"><span class="text-cyan-400 font-bold text-xl">✅</span> Foto a la factura → stock cargado solo</li>
+                            <li class="flex items-start gap-3 text-base sm:text-xl text-white font-black uppercase tracking-tight"><span class="text-cyan-400 font-bold text-xl">✅</span> Ganancia real por producto</li>
+                            <li class="flex items-start gap-3 text-base sm:text-xl text-white font-black uppercase tracking-tight"><span class="text-cyan-400 font-bold text-xl">✅</span> Control total desde tu celular</li>
+                            <li class="flex items-start gap-3 text-base sm:text-xl text-white font-black uppercase tracking-tight"><span class="text-cyan-400 font-bold text-xl">✅</span> Facturación ARCA integrada</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-12 sm:mt-16 text-center">
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" class="btn-primary inline-flex items-center justify-center rounded-full w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-black font-black px-8 sm:px-16 py-4 sm:py-8 text-xl sm:text-2xl shadow-[0_0_40px_rgba(6,182,212,0.4)] uppercase tracking-tighter">ACTIVÁ TU KIOSCO INTELIGENTE</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- OFERTA SECTION -->
+        <section id="oferta" class="py-12 bg-gradient-to-b from-black to-zinc-900 relative border-t border-white/10">
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px); background-size: 50px 50px;"></div>
+            <div class="container mx-auto px-4 max-w-5xl relative z-10">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-6xl font-black text-white mb-4 uppercase tracking-tighter">Esto es lo que <span class="text-cyan-500">obtenés al acceder</span> hoy</h2>
+                    <p class="text-zinc-400 text-lg">Una plataforma completa para manejar tu kiosco como una empresa, desde el celular.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-16 text-left max-w-6xl mx-auto">
+                    <div class="p-8 sm:p-10 rounded-3xl bg-zinc-900/50 border border-white/5 hover:bg-zinc-800/50 transition-colors">
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-4 uppercase tracking-tight"><span class="text-red-500 mr-2">✓</span> IA Lector de Facturas</h3>
+                        <p class="text-zinc-400 text-base sm:text-lg leading-relaxed font-bold">Cargá el stock de todo el mes en minutos sacando fotos a las facturas del mayorista.</p>
+                    </div>
+                    <div class="p-8 sm:p-10 rounded-3xl bg-zinc-900/50 border border-white/5 hover:bg-zinc-800/50 transition-colors">
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-4 uppercase tracking-tight"><span class="text-red-500 mr-2">✓</span> Control de Stock Inteligente</h3>
+                        <p class="text-zinc-400 text-base sm:text-lg leading-relaxed font-bold">Sabé exactamente qué tenés, qué te falta y qué se está por vencer. Alertas automáticas de reposición.</p>
+                    </div>
+                    <div class="p-8 sm:p-10 rounded-3xl bg-zinc-900/50 border border-white/5 hover:bg-zinc-800/50 transition-colors">
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-4 uppercase tracking-tight"><span class="text-red-500 mr-2">✓</span> Caja Blindada Anti-Robos</h3>
+                        <p class="text-zinc-400 text-base sm:text-lg leading-relaxed font-bold">Control total de cada centavo. Si falta una moneda, el sistema lo detecta. Imposible robar sin que lo sepas.</p>
+                    </div>
+                    <div class="p-8 sm:p-10 rounded-3xl bg-zinc-900/50 border border-white/5 hover:bg-zinc-800/50 transition-colors">
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-4 uppercase tracking-tight"><span class="text-red-500 mr-2">✓</span> Facturación ARCA Integrada</h3>
+                        <p class="text-zinc-400 text-base sm:text-lg leading-relaxed font-bold">Facturá electrónicamente desde el celular. Facturas A, B y C. 100% legal y al día con ARCA.</p>
+                    </div>
+                    <div class="p-8 sm:p-10 rounded-3xl bg-zinc-900/50 border border-white/5 hover:bg-zinc-800/50 transition-colors">
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-4 uppercase tracking-tight"><span class="text-red-500 mr-2">✓</span> Control desde el Celular</h3>
+                        <p class="text-zinc-400 text-base sm:text-lg leading-relaxed font-bold">Andate tranquilo. Controlá ventas, caja, stock y empleados desde cualquier lugar con tu teléfono.</p>
+                    </div>
+                    <div class="p-8 sm:p-10 rounded-3xl bg-zinc-900/50 border border-white/5 hover:bg-zinc-800/50 transition-colors">
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-4 uppercase tracking-tight"><span class="text-red-500 mr-2">✓</span> Reportes de Ganancia Real</h3>
+                        <p class="text-zinc-400 text-base sm:text-lg leading-relaxed font-bold">No más dudas. Sabé exactamente cuánto ganaste, qué productos rinden y cuáles no.</p>
+                    </div>
+                </div>
+
+                <!-- PRICING CARD -->
+                <div class="max-w-5xl mx-auto bg-black/80 backdrop-blur-3xl rounded-[3rem] border border-white/20 p-8 sm:p-16 relative overflow-hidden group shadow-[0_0_100px_rgba(239,68,68,0.15)] text-center ring-1 ring-white/10">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-transparent via-red-500/20 to-transparent blur-md animate-pulse opacity-50"></div>
+                    <div class="relative z-10 flex flex-col items-center gap-8">
+                        <span class="text-sm font-black text-red-400 tracking-[0.3em] uppercase border border-red-500/30 px-6 py-2 rounded-full bg-red-950/30">OFERTA LANZAMIENTO 2026</span>
+                        <div class="flex flex-col items-center gap-2 sm:gap-4">
+                            <span class="text-zinc-500 line-through text-2xl sm:text-3xl font-bold">$ 38.999 / mes</span>
+                            <span class="text-6xl sm:text-8xl lg:text-9xl font-black text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.2)] tracking-tighter leading-none">
+                                $ 23.000 <span class="text-2xl sm:text-4xl text-zinc-500 font-bold -ml-2 tracking-normal">/mes</span>
+                            </span>
+                            <p class="text-cyan-400 text-sm sm:text-lg font-black uppercase tracking-tight mt-2">Precio congelado por 12 meses — por sucursal</p>
+                            <p class="text-zinc-400 text-sm sm:text-xl italic mt-2 max-w-lg mx-auto font-bold uppercase tracking-tighter">Recuperá esta inversión controlando faltantes de caja en el primer mes.</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-6 mt-8 w-full">
+                            <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" class="btn-primary inline-flex items-center justify-center rounded-full w-full sm:w-auto bg-white hover:bg-zinc-200 text-black font-black text-xl sm:text-3xl h-20 sm:h-28 px-12 sm:px-20 shadow-[0_0_50px_rgba(255,255,255,0.3)] uppercase tracking-tighter">ACTIVÁ TU KIOSCO INTELIGENTE</a>
+                            <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-zinc-300 text-sm sm:text-base font-black uppercase tracking-widest">
+                                <span class="flex items-center gap-2 justify-center"><span class="w-2 h-2 rounded-full bg-green-500"></span> Acceso Inmediato</span>
+                                <span class="flex items-center gap-2 justify-center"><span class="w-2 h-2 rounded-full bg-green-500"></span> Sin contratos</span>
+                                <span class="flex items-center gap-2 justify-center"><span class="w-2 h-2 rounded-full bg-green-500"></span> Garantía 20 días</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section id="faq" class="py-12 bg-zinc-950">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-4 uppercase tracking-tighter">Preguntas <span class="text-cyan-500">frecuentes</span></h2>
+                    <p class="text-zinc-400 text-lg">Todo lo que necesitás saber antes de comprar.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Necesito una computadora para usarlo?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">No. Funciona 100% desde el celular. Podés vender, facturar, controlar stock y ver reportes desde cualquier teléfono con internet. Si querés usarlo en PC también podés, pero no es necesario.</p>
+                        </div>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Sirve para maxikioscos y polirrubros?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">Sí. Funciona perfecto para kioscos, maxikioscos, polirrubros, drugstores y cualquier comercio minorista. Manejá miles de productos sin problema.</p>
+                        </div>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Viene con facturación ARCA?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">Sí. Facturación electrónica integrada con ARCA (ex AFIP). Emitís facturas A, B y C desde el celular. 100% legal y al día.</p>
+                        </div>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Cómo es eso de la foto a la factura?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">Cuando te llega mercadería del mayorista, le sacás una foto a la factura. La IA lee todos los productos, cantidades y precios, y te carga el stock automáticamente en 3 segundos. Cero tipeo manual.</p>
+                        </div>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Cómo funciona la caja blindada?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">Cada venta queda registrada. Al cierre del día, el sistema te dice exactamente cuánto tiene que haber en la caja. Si falta aunque sea $100, lo sabés al instante. No hay forma de esconder diferencias.</p>
+                        </div>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Puedo controlar el kiosco sin estar ahí?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">Sí. Podés ver todo en tiempo real desde cualquier lugar. Ventas del día, movimientos de caja, stock, y hasta preguntarle a la IA "¿cuánto se vendió hoy?" y te responde al instante.</p>
+                        </div>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Qué pasa si no me sirve?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">Tenés 20 días de garantía con devolución del 100%. Si no te sirve, te devolvemos toda la plata sin preguntas. Cero riesgo.</p>
+                        </div>
+                    </div>
+                    <div class="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm faq-item">
+                        <button onclick="toggleFaq(this)" class="flex items-center justify-between w-full p-6 text-left hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-bold text-white pr-8">¿Tengo que cargar todos los productos uno por uno?</span>
+                            <span class="text-2xl text-cyan-500 faq-toggle">+</span>
+                        </button>
+                        <div class="faq-content px-6 pb-0">
+                            <p class="text-zinc-400 pb-6">No. Al sacar foto a la factura del mayorista, la IA crea los productos nuevos automáticamente. También podés importar listas o usar el escáner de código de barras. En un par de días ya tenés todo cargado.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-20">
+                    <a href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=8576b5cf7bee4b4e9c3acf70f310210b" class="btn-primary inline-flex items-center justify-center rounded-full w-full sm:w-auto bg-purple-600 hover:bg-purple-500 text-white font-black px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg shadow-[0_0_30px_rgba(147,51,234,0.3)]">🟣 LISTO, QUIERO EMPEZAR – COMPRAR SISTEMA PARA MI KIOSCO</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full bg-black border-t border-white/10 py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col items-center gap-8">
+            <div class="flex flex-col items-center gap-4">
+                <a href="#" class="flex items-center gap-3 transition-transform hover:scale-105">
+                    <img alt="Logo" height="36" width="36" src="https://qbitsapp.com/images/logo.png" class="rounded">
+                    <p class="font-black text-white text-xl tracking-tighter">Kiosco</p>
+                </a>
+                <p class="text-zinc-500 text-sm text-center max-w-xs">Gestioná tu stock, ventas, caja y proveedores de forma profesional. Control total desde el celular.</p>
+            </div>
+            <div class="flex flex-col items-center gap-4">
+                <a href="https://wa.me/5491136444546?text=%C2%A1Hola!%20Vi%20la%20oferta%20de%20Kiosco%20Inteligente%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-green-500/10 text-green-400 border border-green-500/20 px-6 py-3 rounded-full hover:bg-green-500/20 transition-all duration-300 group">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    <span class="font-bold">Contactanos por WhatsApp</span>
+                </a>
+                <p class="text-zinc-500 text-xs font-mono tracking-widest uppercase">Soporte 24/7 para clientes</p>
+            </div>
+            <div class="flex flex-col items-center gap-2 pt-8 border-t border-white/5 w-full">
+                <p class="text-zinc-500 text-[10px] uppercase tracking-[0.2em]">© 2026 QBits Argentina. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FLOATING WhatsApp Button -->
+    <a href="https://wa.me/5491136444546?text=%C2%A1Hola!%20Vi%20la%20oferta%20de%20Kiosco%20Inteligente%20y%20quiero%20m%C3%A1s%20info." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-400 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(34,197,94,0.5)] transition-all hover:scale-110">
+        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <script>
+        // Countdown Timer
+        function initCountdown() {
+            let totalSeconds = 24 * 3600; // 24 horas
+            const TIMER_VERSION = 'v2_24h';
+            
+            const stored = localStorage.getItem('qbits_kiosco_countdown');
+            const storedTime = localStorage.getItem('qbits_kiosco_countdown_time');
+            const storedVersion = localStorage.getItem('qbits_kiosco_countdown_ver');
+            
+            if (stored && storedTime && storedVersion === TIMER_VERSION) {
+                const elapsed = Math.floor((Date.now() - parseInt(storedTime)) / 1000);
+                totalSeconds = Math.max(0, parseInt(stored) - elapsed);
+            } else {
+                localStorage.setItem('qbits_kiosco_countdown', totalSeconds);
+                localStorage.setItem('qbits_kiosco_countdown_time', Date.now());
+                localStorage.setItem('qbits_kiosco_countdown_ver', TIMER_VERSION);
+            }
+            
+            function updateDisplay() {
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const hStr = hours.toString().padStart(2, '0');
+                const mStr = minutes.toString().padStart(2, '0');
+                
+                const desktopEl = document.getElementById('desktop-countdown');
+                const mobileH = document.getElementById('mobile-hours');
+                const mobileM = document.getElementById('mobile-minutes');
+                
+                if (desktopEl) desktopEl.textContent = hStr + ':' + mStr;
+                if (mobileH) mobileH.textContent = hStr;
+                if (mobileM) mobileM.textContent = mStr;
+                
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    setTimeout(updateDisplay, 1000);
+                }
+            }
+            
+            updateDisplay();
+        }
+        
+        // FAQ Toggle
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('.faq-toggle');
+            
+            content.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initCountdown);
+        
+        // Track CTA clicks with Meta Pixel
+        document.querySelectorAll('a[href*="mercadopago"]').forEach(link => {
+            link.addEventListener('click', function() {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'InitiateCheckout', {
+                        content_name: 'Kiosco Inteligente',
+                        content_category: 'Kiosco',
+                        value: 23000,
+                        currency: 'ARS'
+                    });
+                }
+            });
+        });
+    </script>
+<script>
+// Meta CAPI data capture - adds fbc, fbp to MP checkout links
+(function(){function getCookie(n){var m=document.cookie.match(new RegExp("(^| )"+n+"=([^;]+)"));return m?m[2]:"";}document.addEventListener("click",function(e){var l=e.target.closest("a[href*=\"mercadopago\"]");if(l){var u=new URL(l.href);var fbc=getCookie("_fbc");var fbp=getCookie("_fbp");if(fbc)u.searchParams.set("fbc",fbc);if(fbp)u.searchParams.set("fbp",fbp);var p=new URLSearchParams(window.location.search);var fc=p.get("fbclid");if(fc&&!fbc)u.searchParams.set("fbc","fb.1."+Date.now()+"."+fc);l.href=u.toString();}});})();
+</script></body>
+</html>
